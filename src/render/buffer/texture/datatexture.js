@@ -28,6 +28,7 @@ export class DataTexture {
 
     const gl = this.renderer.getContext();
     this.gl = gl;
+    this.isWebGL2 = gl instanceof WebGL2RenderingContext
     const minFilter =
       (options != null ? options.minFilter : undefined) != null
         ? options != null
@@ -55,13 +56,56 @@ export class DataTexture {
     this.build(options);
   }
 
+  getInternalFormat( glFormat, glType ) {
+
+		let internalFormat = glFormat;
+    let _gl = this.gl
+		if ( glFormat === _gl.RED ) {
+
+			if ( glType === _gl.FLOAT ) internalFormat = _gl.R32F;
+			if ( glType === _gl.HALF_FLOAT ) internalFormat = _gl.R16F;
+			if ( glType === _gl.UNSIGNED_BYTE ) internalFormat = _gl.R8;
+
+		}
+
+		if ( glFormat === _gl.RGB ) {
+
+			if ( glType === _gl.FLOAT ) internalFormat = _gl.RGB32F;
+			if ( glType === _gl.HALF_FLOAT ) internalFormat = _gl.RGB16F;
+			if ( glType === _gl.UNSIGNED_BYTE ) internalFormat = _gl.RGB8;
+
+		}
+
+		if ( glFormat === _gl.RGBA ) {
+
+			if ( glType === _gl.FLOAT ) internalFormat = _gl.RGBA32F;
+			if ( glType === _gl.HALF_FLOAT ) internalFormat = _gl.RGBA16F;
+			if ( glType === _gl.UNSIGNED_BYTE ) internalFormat = _gl.RGBA8;
+
+		}
+
+		if ( internalFormat === _gl.R16F || internalFormat === _gl.R32F ||
+			internalFormat === _gl.RGBA16F || internalFormat === _gl.RGBA32F ) {
+
+			// extensions.get( 'EXT_color_buffer_float' );
+
+		} else if ( internalFormat === _gl.RGB16F || internalFormat === _gl.RGB32F ) {
+
+			// console.warn( 'THREE.WebGLRenderer: Floating point textures with RGB format not supported. Please use RGBA instead.' );
+
+		}
+
+		return internalFormat;
+
+	}
+
   build(options) {
     const { gl } = this;
     const state = this.renderer.state;
 
     // Make GL texture
     this.texture = gl.createTexture();
-    this.format = [null, gl.LUMINANCE, gl.LUMINANCE_ALPHA, gl.RGB, gl.RGBA][
+    this.format = [null,this.isWebGL2?gl.RED:gl.LUMINANCE, gl.LUMINANCE_ALPHA, gl.RGB, gl.RGBA][
       this.channels
     ];
     this.format3 = [
@@ -71,6 +115,7 @@ export class DataTexture {
       CONST.RGBFormat,
       CONST.RGBAFormat,
     ][this.channels];
+    const internalFormat = this.getInternalFormat(this.format,this.type)
 
     state.bindTexture(gl.TEXTURE_2D, this.texture);
 
@@ -85,7 +130,8 @@ export class DataTexture {
     gl.texImage2D(
       gl.TEXTURE_2D,
       0,
-      this.format,
+      //https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/texImage2D
+      this.isWebGL2?internalFormat:this.format,
       this.width,
       this.height,
       0,
@@ -131,7 +177,9 @@ export class DataTexture {
   write(data, x, y, w, h) {
     const { gl } = this;
     const state = this.renderer.state;
-
+    if(gl.isContextLost()){
+      this.renderer.forceContextRestore() 
+    }
     // Write to rectangle
     state.bindTexture(gl.TEXTURE_2D, this.texture);
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);

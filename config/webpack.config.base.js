@@ -28,7 +28,7 @@ module.exports = {
   // source when the user debugs the application
   devtool: "source-map",
   optimization: {
-    minimize: true,
+    minimize: false,
     minimizer: [
       new TerserPlugin({
         test: /\.min\.js$/,
