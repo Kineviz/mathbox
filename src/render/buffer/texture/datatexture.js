@@ -178,7 +178,8 @@ export class DataTexture {
     const { gl } = this;
     const state = this.renderer.state;
     if(gl.isContextLost()){
-      this.renderer.forceContextRestore() 
+      const extension = gl.getExtension( 'WEBGL_lose_context');
+      if ( extension ) extension.restoreContext();
     }
     // Write to rectangle
     state.bindTexture(gl.TEXTURE_2D, this.texture);
