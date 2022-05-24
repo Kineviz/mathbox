@@ -87,7 +87,7 @@ const adapter = {
   },
   removeSubsets,
   getName(elem) {
-    return elem.type ?? "";
+    return elem.type || "";
   },
   /**
    * Finds the first node in the array that matches the test predicate, or one
