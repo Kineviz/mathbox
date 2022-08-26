@@ -25,10 +25,10 @@ export class TextAtlas extends Atlas {
   constructor(renderer, shaders, options) {
     let left;
     if (!options.width) {
-      options.width = 256;
+      options.width = 2048;
     }
     if (!options.height) {
-      options.height = 256;
+      options.height = 2048;
     }
     options.type = UnsignedByteType;
     options.channels = 1;
