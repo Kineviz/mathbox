@@ -84,7 +84,7 @@ const _Types = {
         }
       : undefined;
 
-    if (value != null && !(value instanceof Array)) {
+    if (value != null && !(Array.isArray(value))) {
       value = [value];
     }
 
@@ -658,7 +658,7 @@ const _Types = {
 
         if (value instanceof Vector3) {
           target.copy(value);
-        } else if (value instanceof Array) {
+        } else if (Array.isArray(value)) {
           value = value.concat(defaults.slice(value.length));
           target.set.apply(target, value);
         } else if (value != null) {
@@ -734,7 +734,7 @@ const _Types = {
 
         if (value instanceof Vector4) {
           target.copy(value);
-        } else if (value instanceof Array) {
+        } else if (Array.isArray(value) ) {
           value = value.concat(defaults.slice(value.length));
           target.set.apply(target, value);
         } else if (value != null) {
@@ -829,7 +829,7 @@ const _Types = {
       validate(value, target, invalid) {
         if (value instanceof Matrix3) {
           target.copy(value);
-        } else if (value instanceof Array) {
+        } else if (Array.isArray(value)) {
           value = value.concat(defaults.slice(value.length));
           target.set.apply(target, value);
         } else {
@@ -954,7 +954,7 @@ const _Types = {
       validate(value, target, invalid) {
         if (value instanceof Matrix4) {
           target.copy(value);
-        } else if (value instanceof Array) {
+        } else if (Array.isArray(value)) {
           value = value.concat(defaults.slice(value.length));
           target.set.apply(target, value);
         } else {
@@ -1049,7 +1049,7 @@ const _Types = {
 
         if (value instanceof Color) {
           target.copy(value);
-        } else if (value instanceof Array) {
+        } else if (Array.isArray(value)) {
           value = value.concat(defaults.slice(value.length));
           target.setRGB.apply(target, value);
         } else if (value != null) {
@@ -1357,7 +1357,7 @@ const _Types = {
       value = "sans-serif";
     }
     const parse = UJS.parseQuoted;
-    if (!(value instanceof Array)) {
+    if (!(Array.isArray(value))) {
       value = parse(value);
     }
     const stringArray = Types.array(Types.string(), 0, value);
@@ -1368,7 +1368,7 @@ const _Types = {
       },
       validate(value, target, invalid) {
         try {
-          if (!(value instanceof Array)) {
+          if (!(Array.isArray(value))) {
             value = parse(value);
           }
         } catch (error) {
@@ -1392,7 +1392,7 @@ const _Types = {
         return [];
       },
       validate(value, target, invalid) {
-        if (value instanceof Array) {
+        if (Array.isArray(value)) {
           return value;
         } else if ((value != null ? value.length : undefined) != null) {
           return value;

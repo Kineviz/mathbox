@@ -167,7 +167,7 @@ export const transformComposer = function () {
       eulerOrder = "XYZ";
     }
     if (rotation != null) {
-      if (eulerOrder instanceof Array) {
+      if (Array.isArray(eulerOrder)) {
         eulerOrder = swizzleToEulerOrder(eulerOrder);
       }
       euler.setFromVector3(rotation, eulerOrder);
