@@ -106,7 +106,7 @@ const _Types = {
         return __range__(0, size, false).map((_i) => type.make());
       },
       validate(value, target, invalid) {
-        if (!(value instanceof Array)) {
+        if (!Array.isArray(value)) {
           value = [value];
         }
 
@@ -116,7 +116,8 @@ const _Types = {
           asc ? i < end : i > end;
           asc ? i++ : i--
         ) {
-          const input = value[i] != null ? value[i] : type.make();
+          let tempValue = value[i]
+          const input = tempValue != undefined ? tempValue : type.make();
           target[i] = type.validate(input, target[i], invalid);
         }
 
@@ -590,7 +591,7 @@ const _Types = {
 
         if (value instanceof Vector2) {
           target.copy(value);
-        } else if (value instanceof Array) {
+        } else if (Array.isArray(value)) {
           value = value.concat(defaults.slice(value.length));
           target.set.apply(target, value);
         } else if (value != null) {
